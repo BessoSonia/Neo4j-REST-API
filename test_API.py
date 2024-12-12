@@ -27,13 +27,13 @@ def create_group_data():
 
 # Тест для создания пользователя
 def test_create_user(mock_neo4j_handler, create_user_data):
-    mock_neo4j_handler.create_user.return_value = None  # Здесь возвращаем None, так как метод не возвращает данных
+    mock_neo4j_handler.create_user.return_value = None
 
     # Вызов метода
     mock_neo4j_handler.create_user(create_user_data)
 
     # Проверки
-    mock_neo4j_handler.create_user.assert_called_once_with(create_user_data)  # Проверяем, что метод был вызван с нужными данными
+    mock_neo4j_handler.create_user.assert_called_once_with(create_user_data)
 
 # Тест для создания группы
 def test_create_group(mock_neo4j_handler, create_group_data):
@@ -50,7 +50,7 @@ def test_create_relationship(mock_neo4j_handler):
     mock_neo4j_handler.create_relationship.return_value = None
 
     # Вызов метода
-    mock_neo4j_handler.create_relationship(1, 2, "FRIEND")
+    mock_neo4j_handler.create_relationship(1, 2, "FOLLOW")
 
     # Проверки
-    mock_neo4j_handler.create_relationship.assert_called_once_with(1, 2, "FRIEND")
+    mock_neo4j_handler.create_relationship.assert_called_once_with(1, 2, "FOLLOW")
