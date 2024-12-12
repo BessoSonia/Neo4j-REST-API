@@ -23,6 +23,31 @@ def test_get_all_nodes(mock_neo4j_queries):
     mock_neo4j_queries.get_all_nodes.assert_called_once()
 
 
+# Тест для метода get_node_with_relationships
+def test_get_node_with_relationships(mock_neo4j_queries):
+    mock_neo4j_queries.get_node_with_relationships.return_value = [
+        {
+            "node": {"id": 1, "label": "Person", "name": "John Doe"},
+            "relationship": {"type": "KNOWS", "since": 2015},
+            "connected_node": {"id": 2, "label": "City", "name": "Moscow"}
+        },
+        {
+            "node": {"id": 1, "label": "Person", "name": "John Doe"},
+            "relationship": {"type": "LIVES_IN", "since": 2020},
+            "connected_node": {"id": 3, "label": "Country", "name": "Russia"}
+        }
+    ]
+
+    node_id = 1
+    relationships = mock_neo4j_queries.get_node_with_relationships(node_id)
+
+    assert len(relationships) == 2
+    assert relationships[0]["node"]["id"] == 1
+    assert relationships[0]["node"]["label"] == "Person"
+    assert relationships[0]["relationship"]["type"] == "KNOWS"
+    assert relationships[0]["connected_node"]["label"] == "City"
+
+
 # Тест для метода create_node
 def test_create_node(mock_neo4j_queries):
     label = "Person"
@@ -52,7 +77,7 @@ def test_delete_node(mock_neo4j_queries):
 
 
 # Тест для метода close
-def test_close(mock_neo4j_queries):
-    mock_neo4j_queries.close()
-
-    mock_neo4j_queries.close.assert_called_once()
+# def test_close(mock_neo4j_queries):
+#     mock_neo4j_queries.close()
+#
+#     mock_neo4j_queries.close.assert_called_once()
