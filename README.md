@@ -22,3 +22,16 @@
    set NEO4J_USER=ваша_конфигурация_neo4j
    set NEO4J_PASSWORD=ваша_конфигурация_neo4j
    ```
+
+4. Запустите API
+
+    ```bash
+    uvicorn api:app --reload
+    ```
+
+5. Тестирование
+
+    ```bash
+    pytest -v
+    ```
+
