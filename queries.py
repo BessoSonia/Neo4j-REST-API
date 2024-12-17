@@ -26,8 +26,21 @@ class Neo4jQueries:
         RETURN n AS node, r AS relationship, m AS connected_node
         """
         with self.driver.session() as session:
-            return session.run(query, node_id=node_id).data()
-
+            result = session.run(query, node_id=node_id)
+            data = []
+            for record in result:
+                node = dict(record["node"].items())  # Узел в словарь
+                relationship = {
+                    "type": record["relationship"].type  # Добавляем тип связи
+                }
+                relationship.update(record["relationship"].items())  # Добавляем атрибуты связи
+                connected_node = dict(record["connected_node"].items())  # Связанный узел в словарь
+                data.append({
+                    "node": node,
+                    "relationship": relationship,
+                    "connected_node": connected_node
+                })
+            return data
 
     # Создание нового узла с указанным label и свойствами
     def create_node(self, label, properties):

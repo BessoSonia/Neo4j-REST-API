@@ -48,14 +48,16 @@ async def get_nodes():
 async def get_node_with_relationships(node_id: int):
     try:
         relationships = neo4j_queries.get_node_with_relationships(node_id)
-        return [
+        print(relationships)
+        result = [
             {
                 "node": relationship["node"],
-                "relationship": relationship["relationship"],
+                "relationship": {"type": relationship["relationship"]},
                 "connected_node": relationship["connected_node"]
             }
             for relationship in relationships
         ]
+        return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
