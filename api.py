@@ -19,6 +19,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 class Node(BaseModel):
     id: int
     label: str
+    properties: dict = {}
 
 class NodeWithRelationships(BaseModel):
     node: dict
@@ -43,6 +44,21 @@ async def get_nodes():
         return [{"id": node["id"], "label": node["label"]} for node in nodes]
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/nodes/{node_id}", response_model=Node)
+async def get_node(node_id: int):
+    try:
+        node = neo4j_queries.get_node(node_id)
+        if node is None:
+            raise HTTPException(status_code=404, detail="Node not found")
+        if 'label' not in node:
+            raise HTTPException(status_code=500, detail="Missing 'label' field in node data")
+        return node
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Internal Server Error: {str(e)}")
+
+
 
 @app.get("/nodes/{node_id}/relationships", response_model=list[NodeWithRelationships])
 async def get_node_with_relationships(node_id: int):

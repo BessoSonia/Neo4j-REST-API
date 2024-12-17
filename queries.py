@@ -17,6 +17,21 @@ class Neo4jQueries:
         with self.driver.session() as session:
             return session.run(query).data()
 
+    # Получение одного узла
+    def get_node(self, node_id):
+        query = """
+        MATCH (n)
+        WHERE id(n) = $node_id
+        RETURN n AS node, labels(n) AS label
+        """
+        with self.driver.session() as session:
+            result = session.run(query, node_id=node_id)
+            if not result.peek():
+                return None
+            record = result.single()
+            node = dict(record["node"].items())  # Узел в словарь
+            node["label"] = record["label"][0] if record["label"] else "Unknown"  # Присваиваем label
+            return node
 
     # Получение узла и всех его связей с атрибутами узлов и связей
     def get_node_with_relationships(self, node_id):
@@ -41,6 +56,7 @@ class Neo4jQueries:
                     "connected_node": connected_node
                 })
             return data
+
 
     # Создание нового узла с указанным label и свойствами
     def create_node(self, label, properties):
